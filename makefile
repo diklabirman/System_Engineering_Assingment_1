@@ -7,28 +7,36 @@ all: $(TARGETS)
 .c.o:
 	$(CC) $(CFLAGS) -c $<
 
-loops: basicClassification.o advancedClassificationLoop.o
+libclassloops.a: basicClassification.o advancedClassificationLoop.o
 	$(AR) -r libclassloops.a $^
 	ranlib libclassloops.a
-	
-loopd: basicClassification.o advancedClassificationLoop.o
+
+loops: libclassloops.a	
+
+libclassloops.so: basicClassification.o advancedClassificationLoop.o
 	$(CC) -shared -o libclassloops.so $^
 
-recursives: basicClassification.o advancedClassificationRecursion.o
+loopd: libclassloops.so
+
+libclassrec.a: basicClassification.o advancedClassificationRecursion.o
 	$(AR) -r libclassrec.a $^
 	ranlib libclassrec.a
-	
-recursived: basicClassification.o advancedClassificationRecursion.o
+
+recursives: libclassrec.a
+
+libclassrec.so: basicClassification.o advancedClassificationRecursion.o
 	$(CC) -shared -o libclassrec.so $^
 	
-mains: main.o recursives
-	$(CC) $(CFLAGS) -o main main.o -static -L. -lclassrec -lm	
+recursived: libclassrec.so
 	
-maindloop: main.o loopd
-	$(CC) -o maindloop main.o -L. -lclassloops -lm
+mains: main.o libclassrec.a
+	$(CC) $(CFLAGS) -o mains main.o libclassrec.a -lm	
 	
-maindrec: main.o recursived
-	$(CC) -o maindrec main.o -L. -lclassrec -lm
+maindloop: main.o libclassloops.so
+	$(CC) $(CFLAGS) -o maindloop main.o ./libclassloops.so -lm
+	
+maindrec: main.o libclassrec.so
+	$(CC) $(CFLAGS) -o maindrec main.o ./libclassrec.so -lm
 	
 clean:
 	rm -f *.o *.a *.so 
