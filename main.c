@@ -71,7 +71,7 @@ int main()
     printPrime(num1, num2);
     printStrong(num1, num2);
 
-    return 1;
+    return 0;
 }
 
 
