@@ -8,8 +8,7 @@ all: $(TARGETS)
 	$(CC) $(CFLAGS) -c $<
 
 libclassloops.a: basicClassification.o advancedClassificationLoop.o
-	$(AR) -r libclassloops.a $^
-	ranlib libclassloops.a
+	$(AR) -rcs libclassloops.a $^
 
 loops: libclassloops.a	
 
@@ -19,8 +18,7 @@ libclassloops.so: basicClassification.o advancedClassificationLoop.o
 loopd: libclassloops.so
 
 libclassrec.a: basicClassification.o advancedClassificationRecursion.o
-	$(AR) -r libclassrec.a $^
-	ranlib libclassrec.a
+	$(AR) -rcs libclassrec.a $^
 
 recursives: libclassrec.a
 
